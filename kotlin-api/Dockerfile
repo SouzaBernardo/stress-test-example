@@ -1,9 +1,5 @@
 # Etapa 1: Construção com GraalVM
-FROM ghcr.io/graalvm/jdk:21 AS build
-
-# Instalar dependências necessárias
-RUN microdnf install -y findutils
-
+FROM ghcr.io/graalvm/jdk-community:23.0.2-ol9-20250121 AS build
 # Definir diretório de trabalho
 WORKDIR /app
 
