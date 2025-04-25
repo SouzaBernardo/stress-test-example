@@ -1,20 +1,8 @@
-# Etapa 1: Construção com GraalVM
-FROM ghcr.io/graalvm/jdk-community:23.0.2-ol9-20250121 AS build
-# Definir diretório de trabalho
+FROM gradle:jdk23-graal AS build
 WORKDIR /app
-
-# Copiar arquivos de construção
-COPY build.gradle.kts settings.gradle.kts gradlew ./
-COPY gradle gradle/
-RUN ./gradlew build
-
-# Copiar código-fonte
-COPY src src/
-
-# Compilar imagem nativa
+COPY . . 
 RUN ./gradlew nativeCompile 
 
-# Etapa 2: Imagem mínima com a aplicação nativa
 FROM scratch
 
 # Copiar binário nativo da etapa anterior
