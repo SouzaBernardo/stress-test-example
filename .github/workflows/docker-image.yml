@@ -28,7 +28,7 @@ jobs:
 
       - name: Subir containers com Docker Compose
         run: |
-          docker-compose -f docker-compose.yml up -d
+          docker-compose up -d
 
       - name: Rodar script de teste
         run: |
