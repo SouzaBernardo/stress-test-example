@@ -1,12 +1,10 @@
+# Etapa 1: Build nativo com GraalVM
 FROM gradle:jdk23-graal AS build
 WORKDIR /app
-COPY . . 
-RUN ./gradlew nativeCompile 
+COPY . .
+RUN ./gradlew nativeCompile --no-daemon
 
+# Etapa 2: Imagem mínima com o binário nativo
 FROM scratch
-
-# Copiar binário nativo da etapa anterior
-COPY --from=build /app/build/native/nativeCompile/demo /demo
-
-# Definir ponto de entrada
-ENTRYPOINT ["/demo"]
+COPY --from=build /app/build/native/nativeCompile/demo .
+ENTRYPOINT ["./demo"]
