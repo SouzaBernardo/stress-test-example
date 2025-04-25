@@ -1,11 +1,10 @@
-# Etapa 1: Build com GraalVM
-FROM ghcr.io/graalvm/native-image-community AS build
+# Etapa 1: build nativo
+FROM ghcr.io/graalvm/native-image-community:latest AS build
 WORKDIR /app
 COPY . .
-RUN ./gradlew nativeCompile --no-daemon
+RUN microdnf install -y findutils && ./gradlew nativeCompile
 
-# Etapa 2: Imagem mínima com binário nativo
+# Etapa 2: imagem mínima
 FROM scratch
 COPY --from=build /app/build/native/nativeCompile/demo .
-EXPOSE 8080
 ENTRYPOINT ["./demo"]
