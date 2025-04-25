@@ -1,0 +1,46 @@
+name: Testar APIs com Docker Compose
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test_apis:
+    runs-on: ubuntu-latest
+
+    services:
+      docker:
+        image: docker:20.10.16
+        options: --privileged
+        ports:
+          - 8081:8081
+          - 8082:8082
+
+    steps:
+      - name: Verificar código
+        uses: actions/checkout@v3
+
+      - name: Configurar Docker Compose
+        run: |
+          curl -L https://github.com/docker/compose/releases/download/v2.10.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+          chmod +x /usr/local/bin/docker-compose
+
+      - name: Subir containers com Docker Compose
+        run: |
+          docker-compose -f docker-compose.yml up -d
+
+      - name: Rodar script de teste
+        run: |
+          ./script.sh
+
+      - name: Capturar logs das APIs
+        run: |
+          echo "Logs da API Go:"
+          curl http://localhost:8081/hello
+          echo "Logs da API Kotlin:"
+          curl http://localhost:8082/hello
+
+      - name: Parar containers
+        run: |
+          docker-compose down
