@@ -1,5 +1,5 @@
 # Etapa 1: Build nativo com GraalVM
-FROM gradle:jdk23-graal AS build
+FROM gradle:jdk-21-and-22-graal AS build
 WORKDIR /app
 COPY . .
 RUN ./gradlew nativeCompile --no-daemon
