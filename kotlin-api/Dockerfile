@@ -2,7 +2,7 @@
 FROM ghcr.io/graalvm/native-image-community:latest AS build
 WORKDIR /app
 COPY . .
-RUN microdnf install -y findutils && ./gradlew nativeCompile
+RUN apt-get update && apt-get install -y findutils && ./gradlew nativeCompile
 
 # Etapa 2: imagem mínima
 FROM scratch
