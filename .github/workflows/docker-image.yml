@@ -30,11 +30,23 @@ jobs:
         run: |
           docker-compose up -d
 
-      - name: Rodar script de teste
+      - name: Esperar APIs ficarem disponíveis
+        run: |
+          for i in {1..30}; do
+            echo "Tentando conectar às APIs..."
+            if curl -s http://localhost:8081/hello && curl -s http://localhost:8082/hello; then
+              echo "Ambas APIs estão respondendo!"
+              break
+            fi
+            sleep 2
+          done
+
+      - name: Instalar wrk e rodar script de teste
         run: | 
-          sudo apt update
-          sudo apt install wrk
-          chmod +x ./script.sh && ./script.sh
+          sudo apt-get update
+          sudo apt-get install -y wrk
+          chmod +x ./script.sh
+          ./script.sh
 
       - name: Capturar logs das APIs
         run: |
