@@ -9,52 +9,25 @@ jobs:
   test_apis:
     runs-on: ubuntu-latest
 
-    services:
-      docker:
-        image: docker:20.10.16
-        options: --privileged
-        ports:
-          - 8081:8081
-          - 8082:8082
-
     steps:
       - name: Verificar código
         uses: actions/checkout@v3
 
-      - name: Configurar Docker Compose
+      - name: Instalar Docker Compose
         run: |
           curl -L https://github.com/docker/compose/releases/download/v2.10.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
           chmod +x /usr/local/bin/docker-compose
 
-      - name: Subir containers com Docker Compose
+      - name: Construir imagens com Docker Compose
         run: |
-          docker-compose up -d
+          docker-compose build
 
-      - name: Esperar APIs ficarem disponíveis
+      - name: Instalar wrk
         run: |
-          for i in {1..30}; do
-            echo "Tentando conectar às APIs..."
-            if curl -s http://localhost:8081/hello && curl -s http://localhost:8082/hello; then
-              echo "Ambas APIs estão respondendo!"
-              break
-            fi
-            sleep 2
-          done
-
-      - name: Instalar wrk e rodar script de teste
-        run: | 
           sudo apt-get update
           sudo apt-get install -y wrk
+
+      - name: Executar script de teste
+        run: |
           chmod +x ./script.sh
           ./script.sh
-
-      - name: Capturar logs das APIs
-        run: |
-          echo "Logs da API Go:"
-          curl http://localhost:8081/hello
-          echo "Logs da API Kotlin:"
-          curl http://localhost:8082/hello
-
-      - name: Parar containers
-        run: |
-          docker-compose down
