@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: 'api-go'
+    static_configs:
+      - targets: ['api-go:8080']
+  - job_name: 'api-java'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['api-java:8080']

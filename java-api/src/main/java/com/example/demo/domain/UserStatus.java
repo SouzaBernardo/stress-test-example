@@ -1,4 +1,4 @@
-package com.example.demo.controller.request;
+package com.example.demo.domain;
 
 public enum UserStatus {
     ACTIVE, INACTIVE, BANNED

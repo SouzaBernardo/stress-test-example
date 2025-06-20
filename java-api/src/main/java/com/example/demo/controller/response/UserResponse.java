@@ -1,4 +1,8 @@
 package com.example.demo.controller.response;
 
-public class UserResponse {
+public record UserResponse(
+        String name,
+        String status
+) {
+
 }

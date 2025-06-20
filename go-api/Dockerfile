@@ -1,10 +1,7 @@
-FROM golang:1.23 as builder
+FROM golang:1.23-alpine
 WORKDIR /app
 COPY . .
 RUN go mod tidy
-RUN go build -o server .
+RUN go build -o main ./cmd/api
 
-FROM debian:bookworm-slim
-COPY --from=builder /app/server /server
-EXPOSE 8080
-CMD ["/server"]
+CMD ["./main"]

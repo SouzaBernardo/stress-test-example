@@ -1,4 +1,7 @@
 package com.example.demo.repository;
 
-public interface UserRepository {
+import com.example.demo.domain.User;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+
+public interface UserRepository extends ReactiveCrudRepository<User, Integer> {
 }
